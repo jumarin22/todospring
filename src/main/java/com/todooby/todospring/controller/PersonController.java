@@ -25,21 +25,22 @@ public class PersonController {
     @GetMapping
     public Iterable<Person> getAllPeople() {
         log.info("Getting all people in the database...");
-        return this.personRepository.findAll();
+        return personRepository.findAll();
     }
 
     // READ - Get person by person id URL: api/person/id
     @GetMapping(path = "/{id}")
     public Optional<Person> getPersonById(@PathVariable Integer id) {
         log.info("Getting person with ID: " + id + "...");
-        return this.personRepository.findById(id);
+        log.info(personRepository.findById(id));
+        return personRepository.findById(id);
     }
 
     // READ - Get Todos for a person URL: api/person/id/todos
     @GetMapping(path = "/{id}/todos")
     public Iterable<Todo> getTodosForPerson(@PathVariable Integer id) {
         log.info("Getting todos for person with ID: " + id + "...");
-        Optional<Person> personOptional = this.personRepository.findById(id);
+        Optional<Person> personOptional = personRepository.findById(id);
         if (personOptional.isPresent()) {
             Person personChoice = personOptional.get();
             return personChoice.getTodos();
@@ -53,17 +54,17 @@ public class PersonController {
     @PostMapping
     public Person addPerson(@RequestBody Person person) {
         log.info("Adding new person: " + person.toString());
-        return this.personRepository.save(person);
+        return personRepository.save(person);
     }
 
     // UPDATE - PUT request URL: api/person/id
     @PutMapping(path = "/{id}")
     public Person updatePerson(@RequestBody Person person, @PathVariable Integer id) {
         log.info("Updating person with ID: " + id);
-        Optional<Person> personToUpdateOptional = this.personRepository.findById(id);
+        Optional<Person> personToUpdateOptional = personRepository.findById(id);
         if (personToUpdateOptional.isPresent()) {
             Person personUpdate = personToUpdateOptional.get();
-            return this.personRepository.save(personUpdate);
+            return personRepository.save(personUpdate);
         } else {
             log.info("Person ID: " + id + " not found.");
             return null;
@@ -73,9 +74,9 @@ public class PersonController {
     // DELETE - URL: api/person/id
     @DeleteMapping(path = "/{id}")
     public Person deletePerson(@PathVariable Integer id) {
-        Optional<Person> personToDelete = this.personRepository.findById(id);
+        Optional<Person> personToDelete = personRepository.findById(id);
         if (personToDelete.isPresent()) {
-            this.personRepository.delete(personToDelete.get());
+            personRepository.delete(personToDelete.get());
             return personToDelete.get();
         } else {
             log.info("Person ID: " + id + " not found.");
